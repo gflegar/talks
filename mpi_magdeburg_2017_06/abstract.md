@@ -1,4 +1,5 @@
-# Flexible-Size Batched Inversion and Factorization Routines for Block-Jacobi Preconditioning on GPUs
+Flexible-Size Batched Inversion and Factorization Routines for Block-Jacobi Preconditioning on GPUs
+===================================================================================================
 
 As conventional ILU-based preconditioners offer only a limited degree of
 concurrency, in both the factorization, as well as the triangular solve
