@@ -16,5 +16,5 @@ small problem sizes arising in block-Jacobi preconditioning. As a result, these
 routines outperform their counterparts from both open-source, as well as
 proprietary libraries, by a large margin.
 
-Get the slides [here](https://github.com/gflegar/talks/blob/master/mpi_magdeburg_2017_06/slides.pdf).
+Get the slides [here](https://github.com/gflegar/talks/raw/master/mpi_magdeburg_2017_06/slides.pdf).
 
