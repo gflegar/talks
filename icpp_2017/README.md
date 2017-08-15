@@ -1,5 +1,5 @@
-Flexible-Size Batched Inversion and Factorization Routines for Block-Jacobi Preconditioning on GPUs
-===================================================================================================
+Flexible-Size Batched LU for Small Matrices and its Integration into Block-Jacobi Preconditioning
+=================================================================================================
 
 We present a set of new batched CUDA kernels
 for the LU factorization of a large collection of independent
