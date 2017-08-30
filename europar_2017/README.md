@@ -14,5 +14,5 @@ linear algebra libraries for GPUs.
 
 
 Get the slides [here](https://github.com/gflegar/talks/raw/master/europar_2017/slides.pdf),
-and the paper [here]().
+and the paper [here](https://link.springer.com/chapter/10.1007/978-3-319-64203-1_50).
 
