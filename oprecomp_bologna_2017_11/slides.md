@@ -1,64 +1,64 @@
 ---
-title: FloatX: Custom Floating Point Type Emulation Library
-author: Goran Flegar, Cristiano Malossi, Enrique S. Quintana-Orti, Florian ???
+title: 'FloatX: Floating Point Type Emulation Library'
+author:
+- Goran Flegar
+- Cristiano Malossi
+- Enrique S. Quintana-Ortí
+- Florian Scheidegger
 date: 23 November 2017
----
-
--------------------------------------------------------------------------------
+...
 
 Why FloatX?
 -----------
 
 *   Transprecision hardware under development
-*   Develop transprecision algorithms
+*   Experiment with transprecision algorithms
     *    Even if hardware __not__ available
     *    Need emulation library: __FloatX__ (Float Extended)
 
--------------------------------------------------------------------------------
-
 Design principles
-=================
+-----------------
 
--------------------------------------------------------------------------------
+*   Efficiency
+*   Ease of use
 
 As efficient as possible
 ------------------------
 
 *   enables larger simulations (e.g. DNNs)
-*   use floating point types supported by the hardware as "backend",
-    artificially reduce precision after every operation to simulate desired
-    type
-*   avoid using extra memory (size of emulated type should not exceed size of
-    backend type)
-*   if emulated type exactly matches a hardware-supported type, avoid any
-    overheads (e.g. emulated double should be as efficient as plain double)
+*   use floating point types supported by hardware as "backend",
+    reduce precision after every operation
+*   avoid using extra memory
+    - size of emulated type &leq; size of backend type
+*   no overhead if emulated type = hardware-supported type
+    - e.g. `floatx<11, 52>` as efficient as `double`
 *   CUDA support
-
--------------------------------------------------------------------------------
 
 As easy to use as native types
 ------------------------------
 
-*   Arithmetic and relational operations, assignements
+*   Arithmetic and relational operations, assignments
     *   `a` and `b` FloatX numbers
     *   `a + b`, `a / b`, ...
     *   `a < b`, `a > b`, ...
     *   `a = b`, `a += b`, `a -= b`, ...
-*   Interoperability between different emulated types (`1.2f + 3.0` is valid)
+
+. . .
+
+*   Interoperability between different emulated types
     *   `a` and `b` FloatX numbers of __different__ precision
     *   arithmetic, relational operations, assignments
-    *   need generalization of standard "type propagation" rules
-        (e.g. `a = b + c`)
-        *   if `a` and `b` are of the same type, the result stored in `a`
-            should be a correctly rounded result of `b + c` in `decltype(a)`
-        *   if `a` and `c` are of the same type, the result stored in `a`
-            should be a correctly rounded result of `b + c` in `decltype(a)`
-    *   concept of _common type_: `common_type(S, T)` is the least precise type
-        which is more precise than both `S` and `T`
-*   Interoperability between emulated and native types
-    *   `a = a + 3`, `a -= 3.5`, `auto x = a + 3.5` (`decltype(x)`?)
+    *   generalization of standard "type propagation" rules (e.g. `a = b + c`)
+        *   if `a` and `b` are of the same type, `a == b + decltype(a)(c)`
+        *   if `a` and `c` are of the same type, `a == decltype(a)(b) + c`
+    *   _common type_: `common_type(S, T)`
+        *   the least precise (smallest) type which is at least as precise as
+            both `S` and `T`
 
--------------------------------------------------------------------------------
+. . .
+
+*   Interoperability between emulated and native types
+     *   `a = a + 3`, `a -= 3.5`, `auto x = a + 3.5` (`decltype(x)`?)
 
 Language of choice: C++
 -----------------------
@@ -68,52 +68,47 @@ Language of choice: C++
 *   operator overloading
 *   powerful compile-time type manipulation via template metaprogramming
 
--------------------------------------------------------------------------------
-
 Example
 -------
 
 ```c++
-floatx<7, 12> a = 1.2, b = 3.2;
+floatx<7, 12> a = 1.2, b = 3.2;  // 7 exp. bits, 12 sig. bits
 floatx<10, 9> c;
 float d = 3.2;
 double e = 5.2;
 
 std::cin >> c;
 
-std::cout << a + b << std::endl;    // decltype(a + b) == floatx<7, 12>
-std::cout << a < b << std::endl;
+c = a + b;    // decltype(a + b) == floatx<7, 12>
+bool t =  a < b;
 
 a += c;
 
-std::cout << a / c << std::endl;    // decltype(a / c) == floatx<10, 12>
-std::cout << c - d << std::endl;    // decltype(c - d) == floatx<10, 23>
-std::cout << a * e << std::endl;    // decltype(a * e) == floatx<11, 52>
-```
+d = a / c;    // decltype(a / c) == floatx<10, 12>
+e = c - d;    // decltype(c - d) == floatx<10, 23>
+c = a * e;    // decltype(a * e) == floatx<11, 52> ?
 
--------------------------------------------------------------------------------
+std::cout << c;
+```
 
 Current status
 --------------
 
-*   What works:
-    *   arithmetic, relational ops, assignment
-        *   same floatx type, different floatx types, floatx and native type
-    *   round to nearest, tie to even rounding policy
+### What works
+*   Arithmetic, relational ops, assignment
+    *   Same floatx type, different floatx types, floatx and native type
+*   Round to nearest, tie to even rounding policy
 
-*   In progress:
-    *   _backend type_ other than `double`
-    *   optimal performance for native type equivalents
-    *   CUDA support
-
--------------------------------------------------------------------------------
+### In progress
+*   _Backend type_ other than `double`
+*   Optimal performance for equivalents of native types
+*   CUDA support
 
 Bonus
 -----
 
-*   Having the precisions of the types fixed at compile time "cripples"
-    experimentation.
-*   There is a _runtime_ version of FloatX type:
+*   Precisions fixed at compile time _cripple_ experimentation
+*   _runtime_ version of `floatx<Exp, Sig>`
 
 ```
 floatxr<> ra(5, 7, 3.2);
@@ -123,20 +118,29 @@ std::cout << ra - b << std::endl;
 ra.set_precision(2, 8);
 ```
 
--------------------------------------------------------------------------------
+*   trade-off: higher memory & instruction requirements
 
 FlexFloat vs FloatX
 -------------------
 
-*   FlexFloat
-    *   C library (also callable from other languages)
-    *   Function-based syntax
-    *   Enables access to transprecission hardware if available
+:::::: {.columns}
 
-*   FloatX
-    *   C++ library (cannot call from other languages)
-    *   Well-known, operator-based syntax, behaviour of builtin types
-    *   Cannot access transprecission hardware directly (but can use FlexFloat
-        as backend type!)
+::: {.column width="50%"}
+### FlexFloat
 
--------------------------------------------------------------------------------
+*   C library (also callable from other languages)
+*   Function-based syntax
+*   Enables access to transprecission hardware if available
+:::
+
+:::{.column width="50%"}
+### FloatX
+
+*   C++ library (cannot call from other languages, but better performance
+    thanks to heavy inlining)
+*   Operator-based syntax, behaviour of builtin types
+*   Cannot access transprecission hardware directly (but can use FlexFloat
+    as backend type!)
+:::
+
+::::::
