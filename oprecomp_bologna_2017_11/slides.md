@@ -72,7 +72,7 @@ Example
 -------
 
 ```c++
-floatx<7, 12> a = 1.2, b = 3.2;  // 7 exp. bits, 12 sig. bits
+floatx<7, 12> a = 1.2, b = 3.2;  // 7 exp, 12 sig. bits
 floatx<10, 9> c;
 float d = 3.2;
 double e = 5.2;
@@ -80,7 +80,7 @@ double e = 5.2;
 std::cin >> c;
 
 c = a + b;    // decltype(a + b) == floatx<7, 12>
-bool t =  a < b;
+bool t = a < b;
 
 a += c;
 
@@ -138,7 +138,7 @@ FlexFloat vs FloatX
 ### FloatX
 
 *   C++ library (cannot call from other languages)
-*   but better performance due to heavy inlining
+*   better performance due to heavy inlining
 *   Operator-based syntax, behaviour of builtin types
 *   Cannot access transprecission hardware directly (but can use FlexFloat
     as backend type)
