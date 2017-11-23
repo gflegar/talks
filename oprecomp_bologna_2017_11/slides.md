@@ -131,16 +131,17 @@ FlexFloat vs FloatX
 *   C library (also callable from other languages)
 *   Function-based syntax
 *   Enables access to transprecission hardware if available
+*   Designed for integration within automatic tools
 :::
 
 :::{.column width="50%"}
 ### FloatX
 
-*   C++ library (cannot call from other languages, but better performance
-    thanks to heavy inlining)
+*   C++ library (cannot call from other languages)
+*   but better performance due to heavy inlining
 *   Operator-based syntax, behaviour of builtin types
 *   Cannot access transprecission hardware directly (but can use FlexFloat
-    as backend type!)
+    as backend type)
 :::
 
 ::::::
