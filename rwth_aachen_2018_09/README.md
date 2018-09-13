@@ -1,5 +1,5 @@
-Accelerating the Solution of Sparse Linear Systems with GPUs
-============================================================
+How to Solve a Linear System
+============================
 
 Krylov solvers are one of the most commonly used methods for the solution of
 large, sparse linear systems. However, depending on the numerical properties of
@@ -16,5 +16,6 @@ developed by our group, which aims at removing the burder from the application
 scientist when solving linear systems, while also enabling easy extensibility
 with custom components needed by distinct applications.
 
+Get the slides
 [here](https://github.com/gflegar/talks/raw/master/rwth_aachen_2018_09/slides.pdf).
 
